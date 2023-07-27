@@ -35,14 +35,16 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Initialise Conda
-        run: conda init bash
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          channels: conda-forge
 
       - name: Install Geostack
+        shell: bash -el {0}
         run: |
-          conda init bash
           conda create -n geostack
           conda activate geostack
-          conda config --add channels conda-forge
           conda install -c geostack/label/dev geostack
           conda install -c conda-forge llvm-openmp
-          GeostackTest

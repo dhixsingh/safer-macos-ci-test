@@ -41,10 +41,19 @@ jobs:
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
 
-      - name: Install Geostack
+      - name: Install Geostack and SAFER dependencies
         shell: bash -el {0}
         run: |
           conda create -n geostack
           conda activate geostack
           conda install -c geostack/label/dev geostack
           conda install -c conda-forge llvm-openmp
+          conda create --name safer --clone geostack
+          conda activate safer
+          conda install -c conda-forge pyproj networkx gdal igraph pytest
+
+      - name: Test it out
+        shell: bash -el {0}
+        run: |
+          conda activate safer
+          python -c "import sys; print(sys.version)"
